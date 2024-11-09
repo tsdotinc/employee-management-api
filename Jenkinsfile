@@ -1,34 +1,33 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven-3.9.2' // This should match the name you configured
+    }
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'Cloning Repository...'
                 git branch: 'main', url: 'https://github.com/tsdotinc/employee-management-api'
             }
         }
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                bat 'mvn clean install' // Use 'bat' for Windows
+                bat 'mvn clean install'
             }
         }
         stage('Test') {
             steps {
-                echo 'Running Tests...'
-                bat 'mvn test' // Use 'bat' for Windows
+                bat 'mvn test'
             }
         }
         stage('Package') {
             steps {
-                echo 'Packaging the application...'
-                bat 'mvn package' // Use 'bat' for Windows
+                bat 'mvn package'
             }
         }
     }
     post {
         always {
-            echo 'Cleaning up workspace...'
             cleanWs()
         }
     }
