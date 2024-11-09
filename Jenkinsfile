@@ -5,11 +5,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning Repository...'
-                checkout scm: [
-                    $class: 'GitSCM', 
-                    branches: [[name: 'refs/heads/main']], 
-                    userRemoteConfigs: [[url: 'https://github.com/tsdotinc/employee-management-api.git', credentialsId: 'github-token']]
-                ]
+                git url: 'https://github.com/tsdotinc/employee-management-api.git', branch: 'main'
             }
         }
 
@@ -18,14 +14,14 @@ pipeline {
                 stage('Build') {
                     steps {
                         echo 'Building the Project...'
-                        sh './mvnw clean install'
+                        sh 'mvn clean install'
                     }
                 }
 
                 stage('Test') {
                     steps {
                         echo 'Running Tests...'
-                        sh './mvnw test'
+                        sh 'mvn test'
                     }
                 }
             }
@@ -34,7 +30,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging the Application...'
-                sh './mvnw package'
+                sh 'mvn package'
             }
         }
 
