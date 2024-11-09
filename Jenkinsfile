@@ -1,16 +1,15 @@
 pipeline {
     agent any
 
-    environment {
-        GIT_REPO = 'https://github.com/tsdotinc/employee-management-api.git'
-        GITHUB_CREDENTIALS = 'github-token' // Make sure this corresponds to your Jenkins credentials ID
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning Repository...'
-                git url: "${GIT_REPO}", credentialsId: "${GITHUB_CREDENTIALS}"
+                checkout scm: [
+                    $class: 'GitSCM', 
+                    branches: [[name: 'refs/heads/main']], 
+                    userRemoteConfigs: [[url: 'https://github.com/tsdotinc/employee-management-api.git', credentialsId: 'github-token']]
+                ]
             }
         }
 
@@ -19,14 +18,14 @@ pipeline {
                 stage('Build') {
                     steps {
                         echo 'Building the Project...'
-                        sh 'mvn clean install'  // Using mvn since Maven is installed on Jenkins
+                        sh './mvnw clean install'
                     }
                 }
 
                 stage('Test') {
                     steps {
                         echo 'Running Tests...'
-                        sh 'mvn test'  // Using mvn test command
+                        sh './mvnw test'
                     }
                 }
             }
@@ -35,14 +34,14 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging the Application...'
-                sh 'mvn package'  // Packaging the application
+                sh './mvnw package'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Deploying the Application...'
-                // Add your deployment steps here (e.g., copy files to a server, deploy to AWS, etc.)
+                // Add your deployment steps here
             }
         }
     }
@@ -50,7 +49,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up workspace...'
-            cleanWs()  // Cleans the workspace to ensure no leftover files from previous builds
+            cleanWs()
         }
     }
 }
