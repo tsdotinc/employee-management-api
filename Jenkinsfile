@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven-3.9.9' // Use the Maven installation configured in Jenkins
+    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -10,19 +13,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                bat 'mvnw.cmd clean install'
+                bat 'mvn clean install' // Use 'bat' for Windows
             }
         }
         stage('Test') {
             steps {
                 echo 'Running Tests...'
-                bat 'mvnw.cmd test'
+                bat 'mvn test' // Use 'bat' for Windows
             }
         }
         stage('Package') {
             steps {
                 echo 'Packaging the application...'
-                bat 'mvnw.cmd package'
+                bat 'mvn package' // Use 'bat' for Windows
             }
         }
     }
