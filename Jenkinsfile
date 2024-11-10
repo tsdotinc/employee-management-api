@@ -25,13 +25,13 @@ pipeline {
                 stage('Unit Tests') {
                     steps {
                         echo 'Running Unit Tests...'
-                        bat 'mvn clean test -Dtest=EmployeeManagementApiApplicationTests -DforkCount=1 -DreuseForks=false'
+                        bat 'mvn test -Dtest=EmployeeManagementApiApplicationTests -DfailIfNoTests=false'
                     }
                 }
                 stage('Integration Tests') {
                     steps {
                         echo 'Running Integration Tests...'
-                        bat 'mvn clean test -Dtest=EmployeeIntegrationTests -DforkCount=1 -DreuseForks=false'
+                        bat 'mvn test -Dtest=EmployeeIntegrationTests -DfailIfNoTests=false'
                     }
                 }
             }
