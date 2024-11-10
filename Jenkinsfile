@@ -21,29 +21,31 @@ pipeline {
             }
         }
         stage('Test') {
-    parallel {
-        stage('Unit Tests') {
-            steps {
-                echo 'Running Unit Tests...'
-                bat 'mvn test -Dtest=EmployeeManagementApiApplicationTests'
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        echo 'Running Unit Tests...'
+                        bat 'mvn clean test -Dtest=EmployeeManagementApiApplicationTests -DforkCount=1 -DreuseForks=false'
+                    }
+                }
+                stage('Integration Tests') {
+                    steps {
+                        echo 'Running Integration Tests...'
+                        bat 'mvn clean test -Dtest=EmployeeIntegrationTests -DforkCount=1 -DreuseForks=false'
+                    }
+                }
             }
         }
-        stage('Integration Tests') {
-            steps {
-                echo 'Running Integration Tests...'
-                bat 'mvn test -Dtest=EmployeeIntegrationTests'
-            }
-        }
-    }
-}
         stage('Package') {
             steps {
+                echo 'Packaging the application...'
                 bat 'mvn package'
             }
         }
     }
     post {
         always {
+            echo 'Cleaning up workspace...'
             cleanWs()
         }
     }
