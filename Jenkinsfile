@@ -21,27 +21,21 @@ pipeline {
             }
         }
         stage('Test') {
-            parallel {
-                stage('Test 1') {
-                    steps {
-                        echo 'Running Test 1...'
-                        bat 'mvn test -Dtest=TestClass1'
-                    }
-                }
-                stage('Test 2') {
-                    steps {
-                        echo 'Running Test 2...'
-                        bat 'mvn test -Dtest=TestClass2'
-                    }
-                }
-                stage('Test 3') {
-                    steps {
-                        echo 'Running Test 3...'
-                        bat 'mvn test -Dtest=TestClass3'
-                    }
-                }
+    parallel {
+        stage('Unit Tests') {
+            steps {
+                echo 'Running Unit Tests...'
+                bat 'mvn test -Dtest=EmployeeManagementApiApplicationTests'
             }
         }
+        stage('Integration Tests') {
+            steps {
+                echo 'Running Integration Tests...'
+                bat 'mvn test -Dtest=EmployeeIntegrationTests'
+            }
+        }
+    }
+}
         stage('Package') {
             steps {
                 bat 'mvn package'
